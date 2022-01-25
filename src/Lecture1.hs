@@ -35,6 +35,7 @@ module Lecture1
 its behaviour, possible types for the function arguments and write the
 type signature explicitly.
 -}
+makeSnippet :: Int -> [Char] -> [Char]
 makeSnippet limit text = take limit ("Description: " ++ text) ++ "..."
 
 {- | Implement a function that takes two numbers and finds sum of
@@ -50,7 +51,8 @@ Explanation: @sumOfSquares 3 4@ should be equal to @9 + 16@ and this
 is 25.
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-sumOfSquares x y = error "TODO!"
+sumOfSquares :: Int -> Int -> Int
+sumOfSquares x y = (x*x) + (y*y)
 
 {- | Implement a function that returns the last digit of a given number.
 
@@ -63,7 +65,8 @@ sumOfSquares x y = error "TODO!"
 
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-lastDigit n = error "lastDigit: Not implemented!"
+lastDigit :: Int -> Int
+lastDigit n = mod (abs n) 10
 
 {- | Write a function that takes three numbers and returns the
 difference between the biggest number and the smallest one.
@@ -77,8 +80,14 @@ and 1 is the smallest, and 7 - 1 = 6.
 Try to use local variables (either let-in or where) to implement this
 function.
 -}
-minmax x y z = error "TODO"
-
+minmax :: Int -> Int -> Int -> Int
+minmax x y z = 
+    let 
+        arr = [x, y, z]
+        minVal = minimum arr
+        maxVal = maximum arr
+    in 
+        maxVal - minVal
 {- | Implement a function that takes a string, start and end positions
 and returns a substring of a given string from the start position to
 the end (including).
@@ -94,7 +103,20 @@ start position can be considered as zero (e.g. substring from the
 first character) and negative end position should result in an empty
 string.
 -}
-subString start end str = error "TODO"
+
+subString :: Int -> Int -> [Char] -> [Char]
+subString start end str = drop (maximum [start, 0]) (take (end+1) str)
+
+-- First Try:
+-- subString :: Int -> Int -> [Char] -> [Char]
+-- subString start end str = subStrRange 0 str ""
+--     where
+--         subStrRange :: Int -> [Char] -> [Char] -> [Char]
+--         subStrRange i strTail subStr
+--             | null strTail || i == end + 1 = subStr
+--             | i >= start && i <= end = subStrRange (i+1) (tail strTail) (subStr ++ [head strTail])
+--             | otherwise = subStrRange (i+1) (tail strTail) subStr
+
 
 {- | Write a function that takes a String — space separated numbers,
 and finds a sum of the numbers inside this string.
@@ -104,7 +126,8 @@ and finds a sum of the numbers inside this string.
 
 The string contains only spaces and/or numbers.
 -}
-strSum str = error "TODO"
+strSum :: String -> Int
+strSum str = sum (map (read::String->Int) (words str))
 
 {- | Write a function that takes a number and a list of numbers and
 returns a string, saying how many elements of the list are strictly
@@ -119,4 +142,15 @@ and lower than 6 elements (4, 5, 6, 7, 8 and 9).
 
 🕯 HINT: Use recursion to implement this function.
 -}
-lowerAndGreater n list = error "TODO"
+lowerAndGreater :: Int -> [Int] -> String
+lowerAndGreater n list = show n ++ " is greater than " ++ show (head lowAndGreatCount) ++ " elements and lower than " ++ show (last lowAndGreatCount) ++ " elements"
+    where
+        go :: Int -> Int -> [Int] -> [Int]
+        -- go c n subArr
+        go l h subList
+            | null subList = [l, h]
+            | head subList < n = go (l+1) h (tail subList)
+            | head subList > n = go l (h+1) (tail subList)
+            | otherwise = go l h (tail subList)
+        
+        lowAndGreatCount = go 0 0 list
