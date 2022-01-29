@@ -105,7 +105,7 @@ string.
 -}
 
 subString :: Int -> Int -> [Char] -> [Char]
-subString start end str = drop (maximum [start, 0]) (take (end+1) str)
+subString start end str = drop (max start 0) (take (end+1) str)
 
 -- First Try:
 -- subString :: Int -> Int -> [Char] -> [Char]
